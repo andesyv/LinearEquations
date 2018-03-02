@@ -16,6 +16,19 @@ void Matrix::FillWithNumbers() {
     }
 }
 
+void Matrix::FillEquation(int column)
+{
+    std::cout << "Enter equation: ";
+    const std::string names[4]{"x: ", "y: ", "z: ", "Answer: "};
+    for (int row{0}; row < m_equationLength; ++row) {
+        std::cout << "\n" << names[row];
+        int in{};
+        std::cin >> in;
+        m_matrix[column][row] = Fraction{in};
+    }
+    std::cout << "\n";
+}
+
 Matrix::~Matrix() {
     for (int i{0}; i < m_column; ++i) {
         delete[] m_matrix[i];
@@ -29,6 +42,47 @@ Fraction Matrix::GetMatrix(int column, int row) const {
     } else {
         return Fraction{};
     }
+}
+
+void Matrix::Solve() {
+    FillWithNumbers();
+    PrintMatrix();
+
+    int columnIndex{0};
+    for (int row{0}; row < m_equationLength - 1; ++row) {
+        // First column
+        // Make 0 not be in the first column.
+        for (int y{columnIndex + 1}; y < m_column; ++y) {
+            if (GetMatrix(columnIndex, row) == 0) {
+                SwapEquations(columnIndex, y);
+                PrintMatrix();
+            } else {
+                break;
+            }
+        }
+        PrintMatrix();
+        // If it's still 1, skip to the next row on the same Index.
+        if (GetMatrix(columnIndex, row) == 0) {
+            continue;
+        }
+
+        // Make the first number be 1;
+        DivideByC(GetMatrix(columnIndex, row), columnIndex);
+        PrintMatrix();
+
+        // For every other row, remove x's.
+        for (int y{0}; y < m_column; ++y) {
+            if (columnIndex == y) {
+                continue;
+            } else {
+                AddByEquation(y, -GetMatrix(y, row), columnIndex);
+                PrintMatrix();
+            }
+        }
+        ++columnIndex;
+    }
+
+    PrintAnswer();
 }
 
 void Matrix::PrintMatrix() {
@@ -70,5 +124,20 @@ void Matrix::AddByEquation(int resultEquation, Fraction c, int addEquation) {
     for (int i{0}; i < m_equationLength; ++i) {
         m_matrix[resultEquation][i] += c * GetMatrix(addEquation, i);
     }
+}
+
+int Matrix::NumberOfColoms() const
+{
+    return m_column;
+}
+
+int Matrix::LengthOfEquation() const
+{
+    return m_equationLength - 1;
+}
+
+void Matrix::PrintAnswer()
+{
+
 }
 

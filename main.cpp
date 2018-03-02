@@ -7,11 +7,21 @@ using namespace std;
 
 int main()
 {
-    Matrix matrix{3, 3};
-    matrix.Solve();
+    std::cout << "How many linear equations are there?\n";
+    int numEquations{0};
+    std::cin >> numEquations;
+    std::cout << "How many different variables are there? (x, y, z, ...)\n";
+    int numVariables{0};
+    std::cin >> numVariables;
 
-    Fraction fraction{-4, -2};
-    std::cout << 3 + Fraction{3} << "\n";
+    Matrix matrix{numVariables, numEquations};
+
+    // Fill the equations:
+    for (int column{0}; column < matrix.NumberOfColoms(); ++column) {
+        matrix.FillEquation(column);
+    }
+
+    matrix.Solve();
 
     return 0;
 }

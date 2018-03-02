@@ -17,55 +17,22 @@ private:
         return ++increase;
     }
 
+    void PrintAnswer();
+
 public:
     // Constructor
-    Matrix(int numberOfDifferentUnknowns, int column);
+    Matrix(int numberOfDifferentUnknowns = 1, int column = 1);
 
     void FillWithNumbers();
+
+    void FillEquation(int column);
 
     // Destructor
     ~Matrix();
 
     Fraction GetMatrix(int column, int row) const;
 
-    void Solve() {
-        FillWithNumbers();
-        PrintMatrix();
-
-        int columnIndex{0};
-        for (int row{0}; row < m_equationLength - 1; ++row) {
-            // First column
-            // Make 0 not be in the first column.
-            for (int y{columnIndex + 1}; y < m_column; ++y) {
-                if (GetMatrix(columnIndex, row) == 0) {
-                    SwapEquations(columnIndex, y);
-                    PrintMatrix();
-                } else {
-                    break;
-                }
-            }
-            PrintMatrix();
-            // If it's still 1, skip to the next row on the same Index.
-            if (GetMatrix(columnIndex, row) == 0) {
-                continue;
-            }
-
-            // Make the first number be 1;
-            DivideByC(GetMatrix(columnIndex, row), columnIndex);
-            PrintMatrix();
-
-            // For every other row, remove x's.
-            for (int y{0}; y < m_column; ++y) {
-                if (columnIndex == y) {
-                    continue;
-                } else {
-                    AddByEquation(y, -GetMatrix(y, row), columnIndex);
-                    PrintMatrix();
-                }
-            }
-            ++columnIndex;
-        }
-    }
+    void Solve();
 
     void PrintMatrix();
 
@@ -79,6 +46,9 @@ public:
 
     // Adds an equation by a c amount to the resultEquation.
     void AddByEquation(int resultEquation, Fraction c, int addEquation);
+
+    int NumberOfColoms() const;
+    int LengthOfEquation() const;
 };
 
 #endif // MATRIX_H
