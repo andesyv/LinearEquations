@@ -45,7 +45,6 @@ Fraction Matrix::GetMatrix(int column, int row) const {
 }
 
 void Matrix::Solve() {
-    FillWithNumbers();
     PrintMatrix();
 
     int columnIndex{0};
