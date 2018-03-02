@@ -9,6 +9,8 @@ class Matrix
 private:
     Fraction **m_matrix{nullptr};
 
+    const char variableList[4]{'x', 'y', 'z', 'w'};
+
     const int m_column{0};
     const int m_equationLength{0};
 
@@ -17,7 +19,7 @@ private:
         return ++increase;
     }
 
-    void PrintAnswer();
+    void PrintAnswer(std::ostream &cout);
 
 public:
     // Constructor
@@ -47,8 +49,8 @@ public:
     // Adds an equation by a c amount to the resultEquation.
     void AddByEquation(int resultEquation, Fraction c, int addEquation);
 
-    int NumberOfColoms() const;
-    int LengthOfEquation() const;
+    int GetColomsAmount() const;
+    int GetEquationLength() const;
 };
 
 #endif // MATRIX_H

@@ -17,7 +17,7 @@ int main()
     Matrix matrix{numVariables, numEquations};
 
     // Fill the equations:
-    for (int column{0}; column < matrix.NumberOfColoms(); ++column) {
+    for (int column{0}; column < matrix.GetColomsAmount(); ++column) {
         matrix.FillEquation(column);
     }
 

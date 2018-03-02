@@ -1,4 +1,6 @@
 #include "matrix.h"
+#include <sstream>
+#include <vector>
 
 Matrix::Matrix(int numberOfDifferentUnknowns, int column) : m_column{column}, m_equationLength{numberOfDifferentUnknowns + 1} {
     m_matrix = new Fraction*[m_column];
@@ -18,15 +20,32 @@ void Matrix::FillWithNumbers() {
 
 void Matrix::FillEquation(int column)
 {
-    std::cout << "Enter equation: ";
-    const std::string names[4]{"x: ", "y: ", "z: ", "Answer: "};
-    for (int row{0}; row < m_equationLength; ++row) {
-        std::cout << "\n" << names[row];
-        int in{};
-        std::cin >> in;
-        m_matrix[column][row] = Fraction{in};
+    std::cout << "Enter " << column + 1 << ". equation: ";
+
+    std::string inputEquation{};
+    std::cin >> inputEquation;
+    std::stringstream stringStrm{inputEquation};
+    for (int i{0}; i < inputEquation.size(); ++i) {
+        for (int p{0}; p < GetEquationLength(); ++p) {
+            if (inputEquation.at(i) == variableList[p]) {
+                std::string temp{};
+                std::getline(stringStrm, temp, variableList[p]);
+                std::stringstream intPusher{temp};
+                int number{};
+                intPusher >> number;
+                m_matrix[column][p] = Fraction{number};
+            }
+        }
     }
-    std::cout << "\n";
+    // Push the rest into answer:
+    std::string temp{};
+    stringStrm.ignore(10, '=');
+    std::getline(stringStrm, temp, '\0');
+    int number{};
+    std::stringstream intPusher{temp};
+    intPusher >> number;
+    m_matrix[column][GetEquationLength()] = Fraction{number};
+
 }
 
 Matrix::~Matrix() {
@@ -59,7 +78,7 @@ void Matrix::Solve() {
                 break;
             }
         }
-        PrintMatrix();
+
         // If it's still 1, skip to the next row on the same Index.
         if (GetMatrix(columnIndex, row) == 0) {
             continue;
@@ -81,7 +100,7 @@ void Matrix::Solve() {
         ++columnIndex;
     }
 
-    PrintAnswer();
+    // PrintAnswer(std::cout);
 }
 
 void Matrix::PrintMatrix() {
@@ -125,18 +144,29 @@ void Matrix::AddByEquation(int resultEquation, Fraction c, int addEquation) {
     }
 }
 
-int Matrix::NumberOfColoms() const
+int Matrix::GetColomsAmount() const
 {
     return m_column;
 }
 
-int Matrix::LengthOfEquation() const
+int Matrix::GetEquationLength() const
 {
     return m_equationLength - 1;
 }
 
-void Matrix::PrintAnswer()
+void Matrix::PrintAnswer(std::ostream &cout)
 {
+    // Print first part of answer.
+    cout << "(";
+    for (int i{0}; i < GetEquationLength(); ++i) {
+        cout << variableList[i];
+        if (i + 1 != GetEquationLength()) {
+            cout << ",";
+        } else {
+            cout << ") = (";
+        }
+    }
+
 
 }
 
