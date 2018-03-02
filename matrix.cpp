@@ -36,6 +36,9 @@ void Matrix::FillEquation(int column)
         for (int p{0}; p < GetEquationLength(); ++p) {
             if (inputEquation.at(i) == variableList[p]) {
                 ExtractionIntoEquation(stringStrm, column, p, variableList[p]);
+                if (GetMatrix(column, p) == 0) {
+                    m_matrix[column][p] = Fraction{1};
+                }
             }
         }
     }
