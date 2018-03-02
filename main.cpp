@@ -1,5 +1,6 @@
 #include <iostream>
 #include <typeinfo>
+#include <cassert>
 #include "fraction.h"
 #include "matrix.h"
 
@@ -10,9 +11,13 @@ int main()
     std::cout << "How many linear equations are there?\n";
     int numEquations{0};
     std::cin >> numEquations;
-    std::cout << "How many different variables are there? (x, y, z, ...)\n";
+    assert(numEquations > 0);
+    std::cout << "How many different variables are there? (maximum 4: x, y, z, w )\n";
     int numVariables{0};
     std::cin >> numVariables;
+    assert(numVariables > 0 && numVariables <= 4);
+
+    std::cin.ignore(24000, '\n');
 
     Matrix matrix{numVariables, numEquations};
 
@@ -21,6 +26,7 @@ int main()
         matrix.FillEquation(column);
     }
 
+    // Solve the equation.
     matrix.Solve();
 
     return 0;

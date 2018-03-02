@@ -10,41 +10,39 @@ Matrix::Matrix(int numberOfDifferentUnknowns, int column) : m_column{column}, m_
     std::cout << "colums is: " << m_column << "\nlength of equation is: " << m_equationLength << "\n";
 }
 
-void Matrix::FillWithNumbers() {
-    for (int y{0}; y < m_column; ++y) {
-        for (int x{0}; x < m_equationLength; ++x) {
-            m_matrix[y][x] = static_cast<Fraction>(Increaser());
-        }
-    }
+void Matrix::ExtractionIntoEquation(std::stringstream &stringStrm, int column, int row, char delimChar)
+{
+    std::string temp{};
+    std::getline(stringStrm, temp, delimChar);
+    std::stringstream intPusher{temp};
+    int number{};
+    intPusher >> number;
+    m_matrix[column][row] = Fraction{number};
 }
 
 void Matrix::FillEquation(int column)
 {
     std::cout << "Enter " << column + 1 << ". equation: ";
+    if (std::cin.fail()) {
+        std::cin.clear();
+        std::cin.ignore(24000, '\n');
+    }
+    // std::cin.ignore(24000, '\n');
 
     std::string inputEquation{};
-    std::cin >> inputEquation;
+    std::getline(std::cin, inputEquation, '\n');
     std::stringstream stringStrm{inputEquation};
-    for (int i{0}; i < inputEquation.size(); ++i) {
+    for (int i{0}; i < static_cast<int>(inputEquation.size()); ++i) {
         for (int p{0}; p < GetEquationLength(); ++p) {
             if (inputEquation.at(i) == variableList[p]) {
-                std::string temp{};
-                std::getline(stringStrm, temp, variableList[p]);
-                std::stringstream intPusher{temp};
-                int number{};
-                intPusher >> number;
-                m_matrix[column][p] = Fraction{number};
+                ExtractionIntoEquation(stringStrm, column, p, variableList[p]);
             }
         }
     }
+    stringStrm.ignore(24000, '=');
+
     // Push the rest into answer:
-    std::string temp{};
-    stringStrm.ignore(10, '=');
-    std::getline(stringStrm, temp, '\0');
-    int number{};
-    std::stringstream intPusher{temp};
-    intPusher >> number;
-    m_matrix[column][GetEquationLength()] = Fraction{number};
+    ExtractionIntoEquation(stringStrm, column, GetEquationLength(), '\0');
 
 }
 
@@ -68,7 +66,7 @@ void Matrix::Solve() {
 
     int columnIndex{0};
     for (int row{0}; row < m_equationLength - 1; ++row) {
-        // First column
+
         // Make 0 not be in the first column.
         for (int y{columnIndex + 1}; y < m_column; ++y) {
             if (GetMatrix(columnIndex, row) == 0) {
@@ -79,7 +77,7 @@ void Matrix::Solve() {
             }
         }
 
-        // If it's still 1, skip to the next row on the same Index.
+        // If it's still 0, skip to the next row on the same Index.
         if (GetMatrix(columnIndex, row) == 0) {
             continue;
         }
@@ -88,7 +86,7 @@ void Matrix::Solve() {
         DivideByC(GetMatrix(columnIndex, row), columnIndex);
         PrintMatrix();
 
-        // For every other row, remove x's.
+        // For every other column, make them 0.
         for (int y{0}; y < m_column; ++y) {
             if (columnIndex == y) {
                 continue;
@@ -156,6 +154,8 @@ int Matrix::GetEquationLength() const
 
 void Matrix::PrintAnswer(std::ostream &cout)
 {
+    //TODO: Finish this function.
+
     // Print first part of answer.
     cout << "(";
     for (int i{0}; i < GetEquationLength(); ++i) {

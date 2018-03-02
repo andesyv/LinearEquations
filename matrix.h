@@ -14,18 +14,11 @@ private:
     const int m_column{0};
     const int m_equationLength{0};
 
-    int Increaser() {
-        static int increase{5};
-        return ++increase;
-    }
-
     void PrintAnswer(std::ostream &cout);
 
 public:
     // Constructor
     Matrix(int numberOfDifferentUnknowns = 1, int column = 1);
-
-    void FillWithNumbers();
 
     void FillEquation(int column);
 
@@ -51,6 +44,7 @@ public:
 
     int GetColomsAmount() const;
     int GetEquationLength() const;
+    void ExtractionIntoEquation(std::stringstream &stringStrm, int column, int row, char delimChar);
 };
 
 #endif // MATRIX_H
