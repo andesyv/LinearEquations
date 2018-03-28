@@ -5,6 +5,15 @@ Fraction::Fraction(int numerator, int denominator) : m_numerator{numerator}, m_d
     reduce();
 }
 
+Fraction::Fraction(Fraction numerator, Fraction denominator)
+{
+    Fraction result{numerator / denominator};
+    m_numerator = result.m_numerator;
+    m_denominator = result.m_denominator;
+
+    reduce();
+}
+
 void Fraction::reduce() {
     int division{gcd(m_numerator, m_denominator)};
     m_numerator /= division;

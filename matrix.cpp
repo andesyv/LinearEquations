@@ -104,6 +104,64 @@ void Matrix::Solve() {
     // PrintAnswer(std::cout);
 }
 
+void Matrix::SolveTraditional() {
+    PrintMatrix();
+
+    int columnIndex{0};
+    for (int row{0}; row < m_equationLength - 1; ++row) {
+
+        // Make 0 not be in the first column.
+        for (int y{columnIndex + 1}; y < m_column; ++y) {
+            if (GetMatrix(columnIndex, row) == 0) {
+                SwapEquations(columnIndex, y);
+                std::stringstream sstream{};
+                sstream << "R" << columnIndex + 1 << " <-> R" << y + 1;
+                std::string str{sstream.str()};
+                PrintMatrix(str);
+            } else {
+                break;
+            }
+        }
+
+        // If it's still 0, skip to the next row on the same Index.
+        if (GetMatrix(columnIndex, row) == 0) {
+            continue;
+        }
+
+        // For every other column, make them 0.
+        for (int y{0}; y < m_column; ++y) {
+            if (columnIndex == y) {
+                continue;
+            } else {
+                // AddByEquation(y, -GetMatrix(y, row), columnIndex);
+                Fraction c{-GetMatrix(y, row), GetMatrix(columnIndex, row)};
+                AddByEquation(y, c, columnIndex);
+                std::stringstream sstream{};
+                sstream << "R" << y  + 1 << " + " << c << "*R" << columnIndex + 1;
+                std::string str{sstream.str()};
+                PrintMatrix(str);
+            }
+        }
+        ++columnIndex;
+    }
+
+    // Divide the first variable in each equation by itself (so it turns into 1)
+    for (int row{0}; row < m_equationLength - 1; ++row) {
+        for (int column{0}; column < m_column; ++column) {
+            if (GetMatrix(column, row) != 0) {
+                Fraction c{GetMatrix(column, row)};
+                DivideByC(c, column);
+                std::stringstream sstream{};
+                sstream << "R" << row  + 1 << " / " << c;
+                std::string str{sstream.str()};
+                PrintMatrix(str);
+            }
+        }
+    }
+
+    // PrintAnswer(std::cout);
+}
+
 void Matrix::PrintMatrix() {
     for (int y{0}; y < m_column; ++y) {
         std::cout << "(";
@@ -114,6 +172,14 @@ void Matrix::PrintMatrix() {
         std::cout << "\n";
     }
     std::cout << "\n";
+}
+
+void Matrix::PrintMatrix(std::string operation)
+{
+    std::string spaces{"\n"};
+    spaces.append(operation.length() / 2, ' ');
+    std::cout << operation << spaces << "~\n\n";
+    PrintMatrix();
 }
 
 void Matrix::MultiplyByC(Fraction c, int column) {
@@ -169,7 +235,5 @@ void Matrix::PrintAnswer(std::ostream &cout)
             cout << ") = (";
         }
     }
-
-
 }
 

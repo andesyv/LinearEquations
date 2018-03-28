@@ -28,8 +28,10 @@ public:
     Fraction GetMatrix(int column, int row) const;
 
     void Solve();
+    void SolveTraditional();
 
     void PrintMatrix();
+    void PrintMatrix(std::string operation);
 
     // Multiplies the whole equation with a number c.
     void MultiplyByC(Fraction c, int column);

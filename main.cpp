@@ -27,7 +27,16 @@ int main()
     }
 
     // Solve the equation.
-    matrix.Solve();
+    matrix.SolveTraditional();
+
+    return 0;
+}
+
+int oldMain() {
+    Fraction a{66};
+    Fraction b{7, 3};
+    Fraction c{49};
+    std::cout << a - (b * c) << "\n";
 
     return 0;
 }
